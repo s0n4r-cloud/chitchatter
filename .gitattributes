@@ -1,0 +1,2 @@
+# Houd onze eigen .nvmrc (Node 22) bij elke sync/merge met upstream
+.nvmrc merge=ours
