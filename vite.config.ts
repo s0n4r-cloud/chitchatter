@@ -13,6 +13,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { manifest } from './manifest'
 import { RouterType } from './src/models/router'
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 const srcPaths = [
   'components',
   'hooks',
@@ -56,31 +58,25 @@ const config = () => {
       // See: https://github.com/vitejs/vite/issues/15012#issuecomment-1956429165
       sourcemap: true,
     },
-    plugins: [
-      svgr({
-        include: '**/*.svg?react',
-      }),
-      react(),
-      macrosPlugin(),
-      nodePolyfills({
-        globals: {
-          Buffer: true,
-          global: true,
-          process: true,
-        },
-        protocolImports: true,
-      }),
-      VitePWA({
-        registerType: 'prompt',
-        devOptions: {
-          enabled: false,
-        },
-        injectRegister: 'auto',
-        filename: 'service-worker.js',
-        manifest,
-        selfDestroying: true,
-      }),
-    ],
+    plugins: [svgr({
+      include: '**/*.svg?react',
+    }), react(), macrosPlugin(), nodePolyfills({
+      globals: {
+        Buffer: true,
+        global: true,
+        process: true,
+      },
+      protocolImports: true,
+    }), VitePWA({
+      registerType: 'prompt',
+      devOptions: {
+        enabled: false,
+      },
+      injectRegister: 'auto',
+      filename: 'service-worker.js',
+      manifest,
+      selfDestroying: true,
+    }), cloudflare()],
     resolve: {
       alias: {
         webtorrent: fileURLToPath(
@@ -106,7 +102,7 @@ const config = () => {
         VITE_ROUTER_TYPE: RouterType.BROWSER,
       },
     },
-  })
+  });
 }
 
 export default config
